@@ -11,6 +11,7 @@ public class LicenseConstants {
 	 */
 	public static final String FILE_NAME = "license";
 	
+	// ---------------------------------------------------------
 	/**
 	 * 授权文件中key: 类型
 	 */
