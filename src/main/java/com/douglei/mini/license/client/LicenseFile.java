@@ -91,11 +91,11 @@ public final class LicenseFile {
 	}
 	
 	/**
-	 * 验证有效期
+	 * 获取验证器
+	 * @param publicKey 公钥
 	 * @return
 	 */
-	public boolean verifyExpired() {
-		// TODO 
-		return false;
+	public LicenseFileValidator getValidator(String publicKey) {
+		
 	}
 }
