@@ -1,6 +1,10 @@
 package com.douglei.mini.license.client.property;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Arrays;
+import java.util.Enumeration;
 
 import com.douglei.mini.license.client.ValidationResult;
 
@@ -29,7 +33,7 @@ public class MacProperty extends Property {
 			
 			@Override
 			public String getMessage() {
-				return "当前服务器MAC地址不合法，合法的MAC地址包括 " + Arrays.toString(getMacs());
+				return "当前服务器MAC地址 "+localhostMac+" 不合法，合法的MAC地址包括 " + Arrays.toString(getMacs());
 			}
 			
 			@Override
@@ -39,7 +43,7 @@ public class MacProperty extends Property {
 			
 			@Override
 			public Object[] getI18nParams() {
-				return new Object[] {Arrays.toString(getMacs())};
+				return new Object[] {localhostMac, Arrays.toString(getMacs())};
 			}
 		};
 	}
@@ -59,5 +63,18 @@ public class MacProperty extends Property {
 	private String getLocalhostMac() {
 		// TODO 这里想办法获取到本机的mac地址
 		return null;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		Enumeration<NetworkInterface> en  = NetworkInterface.getNetworkInterfaces();
+		while(en.hasMoreElements()) {
+			NetworkInterface networkInterface = en.nextElement();
+			
+			Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+			while(inetAddresses.hasMoreElements()) {
+				System.out.println(inetAddresses.nextElement().getHostAddress());
+			}
+			
+		}
 	}
 }
