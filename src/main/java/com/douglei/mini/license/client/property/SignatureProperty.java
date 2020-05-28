@@ -14,7 +14,7 @@ import com.douglei.mini.license.client.ValidationResult;
  * @author DougLei
  */
 public class SignatureProperty extends Property {
-
+	
 	public SignatureProperty(String value) {
 		super("signature", value);
 	}
@@ -34,18 +34,25 @@ public class SignatureProperty extends Property {
 			signature_.initVerify(publicKey_);
 			signature_.update(contentDigest);
 			
-			if(signature_.verify(Base64.getDecoder().decode(value))) {
+			if(signature_.verify(Base64.getDecoder().decode(value)))
 				return null;
-			}
 		} catch (Exception e) {
+			return new ValidationResult() {
+				@Override
+				public String getMessage() {
+					return "公钥不合法";
+				}
+				@Override
+				protected String getCode_() {
+					return "public.key.unlegal";
+				}
+			};
 		}
 		return new ValidationResult() {
-			
 			@Override
 			public String getMessage() {
 				return "签名不合法";
 			}
-			
 			@Override
 			protected String getCode_() {
 				return "signature.unlegal";

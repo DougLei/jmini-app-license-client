@@ -11,7 +11,6 @@ import com.douglei.mini.license.client.ValidationResult;
  * @author DougLei
  */
 public class ExpiredProperty extends Property {
-	private Date expiredDate;
 	
 	public ExpiredProperty(String value) {
 		super("expired", value);
@@ -26,14 +25,7 @@ public class ExpiredProperty extends Property {
 	 * @return
 	 */
 	public ValidationResult verify() {
-		if(expiredDate == null) {
-			try {
-				expiredDate = new SimpleDateFormat("yyyy-MM-dd").parse(value);
-			} catch (ParseException e) {
-			}		
-		}
-		
-		if((expiredDate.getTime() - new Date().getTime()) < 0) {
+		if((getExpiredDate().getTime() - new Date().getTime()) < 0) {
 			return new ValidationResult() {
 				
 				@Override
@@ -48,5 +40,16 @@ public class ExpiredProperty extends Property {
 			};
 		}
 		return null;
+	}
+	
+	private Date expiredDate;
+	private Date getExpiredDate() {
+		if(expiredDate == null) {
+			try {
+				expiredDate = new SimpleDateFormat("yyyy-MM-dd").parse(value);
+			} catch (ParseException e) {
+			}		
+		}
+		return expiredDate;
 	}
 }
