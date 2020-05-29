@@ -33,4 +33,9 @@ public abstract class ValidationResult {
 	public Object[] getI18nParams() {
 		return null;
 	}
+	
+	@Override
+	public String toString() {
+		return getMessage();
+	}
 }

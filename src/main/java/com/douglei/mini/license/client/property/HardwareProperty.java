@@ -23,7 +23,7 @@ public abstract class HardwareProperty extends Property{
 	}
 	
 	// 获取到本机ip实例
-	protected InetAddress getLocalhostInetAddress() {
+	protected InetAddress getInetAddress() {
 		Enumeration<InetAddress> inetAddresses = null;
 		InetAddress inetAddress = null;
 		
@@ -35,7 +35,7 @@ public abstract class HardwareProperty extends Property{
 					inetAddress = inetAddresses.nextElement();
 					if(inetAddress instanceof Inet4Address) {
 						if(!inetAddress.getHostAddress().equals("127.0.0.1")) {
-							return inetAddress;
+							return inetAddress; // 返回第一个非127.0.0.1的ip值的ip实例
 						}
 					}
 				}

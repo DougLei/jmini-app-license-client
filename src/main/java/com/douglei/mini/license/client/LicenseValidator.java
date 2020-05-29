@@ -14,53 +14,26 @@ public class LicenseValidator {
 	}
 	
 	/**
-	 * 验证所有的信息
+	 * 初次验证所有的信息, 包括签名, 用在系统启动时
 	 * @return
 	 */
-	public ValidationResult verifyAll() {
-		ValidationResult validationResult = verifySignature();
-		if(validationResult == null)
-			validationResult = verifyExpired();
-		if(validationResult == null)
-			validationResult = verifyIp();
-		if(validationResult == null)
-			validationResult = verifyMac();
-		return validationResult;
+	public ValidationResult verifyFirst() {
+		ValidationResult result = licenseFile.signature.verify(publicKey, licenseFile.getContentDigest());
+		if(result == null)
+			result = verify();
+		return result;
 	}
 	
 	/**
-	 * 验证有效期
+	 * 验证验证所有的信息, 不包括签名, 用在系统运行时
 	 * @return
 	 */
-	public ValidationResult verifyExpired() {
-		return licenseFile.expired.verify();
-	}
-	
-	/**
-	 * 验证ip
-	 * @return
-	 */
-	public ValidationResult verifyIp() {
-		if(licenseFile.ip != null)
-			return licenseFile.ip.verify();
-		return null;
-	}
-	
-	/**
-	 * 验证mac
-	 * @return
-	 */
-	public ValidationResult verifyMac() {
-		if(licenseFile.mac != null)
-			return licenseFile.mac.verify();
-		return null;
-	}
-
-	/**
-	 * 验证签名
-	 * @return
-	 */
-	public ValidationResult verifySignature() {
-		return licenseFile.signature.verify(publicKey, licenseFile.getContentDigest());
+	public ValidationResult verify() {
+		ValidationResult result = licenseFile.expired.verify();
+		if(result == null && licenseFile.ip != null)
+			result = licenseFile.ip.verify();
+		if(result == null && licenseFile.mac != null)
+			result = licenseFile.mac.verify();
+		return result;
 	}
 }

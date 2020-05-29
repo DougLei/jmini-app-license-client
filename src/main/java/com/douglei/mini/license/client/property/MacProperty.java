@@ -37,7 +37,7 @@ public class MacProperty extends HardwareProperty {
 			
 			@Override
 			public String getMessage() {
-				return "当前服务器MAC地址["+localhostMac+"]不合法，合法的MAC地址包括" + Arrays.toString(getMacs());
+				return "本机MAC地址["+localhostMac+"]不合法，合法的MAC地址包括" + Arrays.toString(getMacs());
 			}
 			
 			@Override
@@ -65,14 +65,14 @@ public class MacProperty extends HardwareProperty {
 	
 	// 获取本机的mac地址
 	private String getLocalhostMac() {
-		InetAddress localhostInetAddress = getLocalhostInetAddress();
-		if(localhostInetAddress != null) {
+		InetAddress inetAddress = getInetAddress();
+		if(inetAddress != null) {
 			try {
-				NetworkInterface networkInterface = NetworkInterface.getByInetAddress(localhostInetAddress);
-				byte[] mac = networkInterface.getHardwareAddress();
+				NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
+				byte[] macByte = networkInterface.getHardwareAddress();
 				StringBuilder sb = new StringBuilder(20);
-				for (int i = 0; i < mac.length; i++) {
-					sb.append(String.format("%02X%s", mac[i], (i<mac.length-1)?"-":""));
+				for (int i = 0; i < macByte.length; i++) {
+					sb.append(String.format("%02X%s", macByte[i], (i<macByte.length-1)?"-":""));
 				}
 				return sb.toString();
 			} catch (SocketException e) {

@@ -1,9 +1,10 @@
 package com.douglei.mini.license.client;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.douglei.tools.instances.scanner.FileScanner;
 
@@ -12,6 +13,7 @@ import com.douglei.tools.instances.scanner.FileScanner;
  * @author DougLei
  */
 class LicenseFileReader {
+	private static final Logger logger = LoggerFactory.getLogger(LicenseFileReader.class);
 	
 	/**
 	 * 读取并获得授权文件实例
@@ -20,7 +22,9 @@ class LicenseFileReader {
 	 */
 	public LicenseFile read() {
 		LicenseFile licenseFile = new LicenseFile();
-		try(InputStream input = new FileInputStream(new File(new FileScanner(".license").scan("").get(0)))){
+		String path = new FileScanner(".license").scan("").get(0);
+		logger.info("加载授权文件: {}", path);
+		try(InputStream input = FileScanner.readByScanPath(path)){
 			ByteArrayOutputStream out = new ByteArrayOutputStream(300);
 			int privateKey = input.read();
 			int separator = input.read()^privateKey;
