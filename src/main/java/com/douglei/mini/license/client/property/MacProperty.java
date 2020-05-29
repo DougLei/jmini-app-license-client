@@ -4,15 +4,19 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Arrays;
-import java.util.Enumeration;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.douglei.mini.license.client.ValidationResult;
+import com.douglei.tools.utils.ExceptionUtil;
 
 /**
  * 
  * @author DougLei
  */
-public class MacProperty extends Property {
+public class MacProperty extends HardwareProperty {
+	private static final Logger logger = LoggerFactory.getLogger(MacProperty.class);
 	
 	public MacProperty(String value) {
 		super("mac", value);
@@ -33,7 +37,7 @@ public class MacProperty extends Property {
 			
 			@Override
 			public String getMessage() {
-				return "当前服务器MAC地址 "+localhostMac+" 不合法，合法的MAC地址包括 " + Arrays.toString(getMacs());
+				return "当前服务器MAC地址["+localhostMac+"]不合法，合法的MAC地址包括" + Arrays.toString(getMacs());
 			}
 			
 			@Override
@@ -61,22 +65,21 @@ public class MacProperty extends Property {
 	
 	// 获取本机的mac地址
 	private String getLocalhostMac() {
-		// TODO 这里想办法获取到本机的mac地址
-		return null;
-	}
-	
-	public static void main(String[] args) throws Exception {
-		System.out.println(InetAddress.getLocalHost().getHostAddress());
-		Enumeration<NetworkInterface> en  = NetworkInterface.getNetworkInterfaces();
-		while(en.hasMoreElements()) {
-			NetworkInterface networkInterface = en.nextElement();
-			
-			Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
-			while(inetAddresses.hasMoreElements()) {
-				InetAddress ia = inetAddresses.nextElement();
-				System.out.println(ia.getClass() +" =====> "+ ia.getHostAddress());
+		InetAddress localhostInetAddress = getLocalhostInetAddress();
+		if(localhostInetAddress != null) {
+			try {
+				NetworkInterface networkInterface = NetworkInterface.getByInetAddress(localhostInetAddress);
+				byte[] mac = networkInterface.getHardwareAddress();
+				StringBuilder sb = new StringBuilder(20);
+				for (int i = 0; i < mac.length; i++) {
+					sb.append(String.format("%02X%s", mac[i], (i<mac.length-1)?"-":""));
+				}
+				return sb.toString();
+			} catch (SocketException e) {
+				logger.error("无法获取主机的MAC信息: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			}
-			
 		}
+			
+		return null;
 	}
 }
