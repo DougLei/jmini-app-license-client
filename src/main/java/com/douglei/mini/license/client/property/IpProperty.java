@@ -1,16 +1,24 @@
 package com.douglei.mini.license.client.property;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Arrays;
+import java.util.Enumeration;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.douglei.mini.license.client.ValidationResult;
+import com.douglei.tools.utils.ExceptionUtil;
 
 /**
  * 
  * @author DougLei
  */
 public class IpProperty extends Property {
+	private static final Logger logger = LoggerFactory.getLogger(IpProperty.class);
 	
 	public IpProperty(String value) {
 		super("ip", value);
@@ -59,9 +67,26 @@ public class IpProperty extends Property {
 	
 	// 获取到本机ip地址
 	private String getLocalhostIp() {
+		Enumeration<InetAddress> inetAddresses = null;
+		InetAddress inetAddress = null;
+		String ipv4 = null;
+		
 		try {
-			return InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
+			Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
+			while(en.hasMoreElements()) {
+				inetAddresses = en.nextElement().getInetAddresses();
+				while(inetAddresses.hasMoreElements()) {
+					inetAddress = inetAddresses.nextElement();
+					if(inetAddress instanceof Inet4Address) {
+						ipv4 = inetAddress.getHostAddress();
+						if(!ipv4.equals("127.0.0.1")) {
+							return ipv4;
+						}
+					}
+				}
+			}
+		} catch (SocketException e) {
+			logger.error("无法获取主机的ip信息: {}", ExceptionUtil.getExceptionDetailMessage(e));
 		}
 		return null;
 	}

@@ -66,13 +66,15 @@ public class MacProperty extends Property {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		System.out.println(InetAddress.getLocalHost().getHostAddress());
 		Enumeration<NetworkInterface> en  = NetworkInterface.getNetworkInterfaces();
 		while(en.hasMoreElements()) {
 			NetworkInterface networkInterface = en.nextElement();
 			
 			Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
 			while(inetAddresses.hasMoreElements()) {
-				System.out.println(inetAddresses.nextElement().getHostAddress());
+				InetAddress ia = inetAddresses.nextElement();
+				System.out.println(ia.getClass() +" =====> "+ ia.getHostAddress());
 			}
 			
 		}
