@@ -74,4 +74,11 @@ public class AutoLicenseValidator extends LicenseValidator{
 	public ValidationResult getResult() {
 		return result;
 	}
+
+	@Override
+	public int getLeftDays() {
+		if(result == null)
+			return super.getLeftDays();
+		return 0;
+	}
 }

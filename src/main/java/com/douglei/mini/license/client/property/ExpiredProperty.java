@@ -90,4 +90,18 @@ public class ExpiredProperty extends Property {
 		}
 		return expiredDate;
 	}
+
+	/**
+	 *  获取剩余有效天数
+	 * @return
+	 */
+	public int getLeftDays() {
+		long leftTimes = getExpiredDate().getTime() - new Date().getTime();
+		if(leftTimes <=0 )
+			return 0;
+		int leftDays= (int)(leftTimes/1000/60/60/24);
+		if(leftDays == 0)
+			leftDays = 1;
+		return leftDays;
+	}
 }

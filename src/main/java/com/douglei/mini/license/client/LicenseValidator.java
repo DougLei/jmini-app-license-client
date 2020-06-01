@@ -36,4 +36,12 @@ public class LicenseValidator {
 			result = licenseFile.mac.verify();
 		return result;
 	}
+	
+	/**
+	 * 获取剩余有效天数
+	 * @return
+	 */
+	public int getLeftDays() {
+		return licenseFile.expired.getLeftDays();
+	}
 }
