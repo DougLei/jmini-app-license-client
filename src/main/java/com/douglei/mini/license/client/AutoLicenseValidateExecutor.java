@@ -1,5 +1,10 @@
 package com.douglei.mini.license.client;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+
 /**
  * 自动的授权文件验证执行器
  * @author DougLei
@@ -29,5 +34,18 @@ class AutoLicenseValidateExecutor extends Thread{
 			if(validator.autoVerify() != null)
 				break;
 		}
+	}
+	
+	public static void main(String[] args) throws Exception {
+		LocalDate a = LocalDate.now();
+		Thread.sleep(1000);
+		LocalDate b = LocalDate.now();
+		System.out.println(a);
+		System.out.println(b);
+		System.out.println(b.isBefore(a));
+		
+		LocalDate d = LocalDate.ofEpochDay(new Date().getTime());
+		
+		
 	}
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 
@@ -30,9 +31,9 @@ public class ExpiredProperty extends Property {
 	 * @return
 	 */
 	public ValidationResult verify() {
-		LocalDate current = LocalDate.now();
+		LocalDateTime current = LocalDateTime.now();
 		ValidationResult result = verifySystemTime(current);
-		if(result == null && (leftDays = ((int)(ChronoUnit.DAYS.between(current, getExpiredDate())+1))) <= 0) {
+		if(result == null && (leftDays = ((int)(ChronoUnit.DAYS.between(current.toLocalDate(), getExpiredDate())+1))) <= 0) {
 			result = new ValidationResult() {
 				
 				@Override
@@ -59,10 +60,10 @@ public class ExpiredProperty extends Property {
 	 * @param current
 	 * @return
 	 */
-	private ValidationResult verifySystemTime(LocalDate current) {
+	private ValidationResult verifySystemTime(LocalDateTime current) {
 		File lastSystemTimeFile = new File(lastSystemTimeFilePath);
 		if(lastSystemTimeFile.exists()) {
-			LocalDate lastSystemTime = JdkSerializeProcessor.deserializeFromFile(LocalDate.class, lastSystemTimeFile);
+			LocalDateTime lastSystemTime = JdkSerializeProcessor.deserializeFromFile(LocalDateTime.class, lastSystemTimeFile);
 			if(current.isBefore(lastSystemTime)) {
 				return new ValidationResult() {
 					
