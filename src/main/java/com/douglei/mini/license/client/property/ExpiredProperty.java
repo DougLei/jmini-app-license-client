@@ -31,8 +31,7 @@ public class ExpiredProperty extends Property {
 	 * @return
 	 */
 	public ValidationResult verify() {
-		Date current = new Date();
-		ValidationResult result = verifySystemTime(current);
+		ValidationResult result = verifySystemTime(new Date());
 		if(result == null && (leftDays = ((int)(ChronoUnit.DAYS.between(LocalDate.now(), getExpiredDate())+1))) <= 0) {
 			result = new ValidationResult() {
 				
