@@ -1,9 +1,6 @@
 package com.douglei.mini.license.client;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * 自动的授权文件验证执行器
@@ -23,7 +20,8 @@ class AutoLicenseValidateExecutor extends Thread{
 		while(true) {
 			// TODO 要计算出具体要sleep多久
 			try {
-				Thread.sleep(10000);
+//				Thread.sleep(sleep());
+				Thread.sleep(5000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -36,16 +34,24 @@ class AutoLicenseValidateExecutor extends Thread{
 		}
 	}
 	
-	public static void main(String[] args) throws Exception {
-		LocalDate a = LocalDate.now();
-		Thread.sleep(1000);
-		LocalDate b = LocalDate.now();
-		System.out.println(a);
-		System.out.println(b);
-		System.out.println(b.isBefore(a));
-		
-		LocalDate d = LocalDate.ofEpochDay(new Date().getTime());
-		
-		
+	// 获取需要sleep的毫秒数
+	private long sleep() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+	    calendar.set(Calendar.MINUTE, 0);
+	    calendar.set(Calendar.SECOND, 0);
+	    calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTimeInMillis() - System.currentTimeMillis();
+	}
+	
+	public static void main(String[] args) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_MONTH, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+	    calendar.set(Calendar.MINUTE, 0);
+	    calendar.set(Calendar.SECOND, 0);
+	    calendar.set(Calendar.MILLISECOND, 0);
+		System.out.println(calendar.getTimeInMillis() - System.currentTimeMillis());
 	}
 }
