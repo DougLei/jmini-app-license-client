@@ -77,9 +77,8 @@ public class ExpiredProperty extends Property {
 					}
 				};
 			}
-		}else {
-			JdkSerializeProcessor.serialize2File(current, lastSystemTimeFilePath);
 		}
+		JdkSerializeProcessor.serialize2File(current, lastSystemTimeFilePath);
 		return null;
 	}
 	
