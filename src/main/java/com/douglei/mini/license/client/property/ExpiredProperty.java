@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
-import java.util.Date;
 
 import com.douglei.mini.license.client.ValidationResult;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
@@ -31,8 +30,9 @@ public class ExpiredProperty extends Property {
 	 * @return
 	 */
 	public ValidationResult verify() {
-		ValidationResult result = verifySystemTime(new Date());
-		if(result == null && (leftDays = ((int)(ChronoUnit.DAYS.between(LocalDate.now(), getExpiredDate())+1))) <= 0) {
+		LocalDate current = LocalDate.now();
+		ValidationResult result = verifySystemTime(current);
+		if(result == null && (leftDays = ((int)(ChronoUnit.DAYS.between(current, getExpiredDate())+1))) <= 0) {
 			result = new ValidationResult() {
 				
 				@Override
@@ -59,11 +59,11 @@ public class ExpiredProperty extends Property {
 	 * @param current
 	 * @return
 	 */
-	private ValidationResult verifySystemTime(Date current) {
+	private ValidationResult verifySystemTime(LocalDate current) {
 		File lastSystemTimeFile = new File(lastSystemTimeFilePath);
 		if(lastSystemTimeFile.exists()) {
-			Date lastSystemTime = JdkSerializeProcessor.deserializeFromFile(Date.class, lastSystemTimeFile);
-			if((lastSystemTime.getTime() - current.getTime()) > 0) {
+			LocalDate lastSystemTime = JdkSerializeProcessor.deserializeFromFile(LocalDate.class, lastSystemTimeFile);
+			if(current.isBefore(lastSystemTime)) {
 				return new ValidationResult() {
 					
 					@Override
