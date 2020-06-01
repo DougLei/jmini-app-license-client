@@ -63,7 +63,7 @@ public class ExpiredProperty extends Property {
 			if((lastSystemTime.getTime() - current.getTime()) > 0) {
 				return new ValidationResult() {
 					
-					@OverrideScheduler
+					@Override
 					public String getMessage() {
 						return "系统时间错误";
 					}
