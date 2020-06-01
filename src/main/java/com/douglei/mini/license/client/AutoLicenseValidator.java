@@ -1,6 +1,14 @@
 package com.douglei.mini.license.client;
 
+import org.quartz.CronScheduleBuilder;
+import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
 
 /**
  * 自动的授权文件验证器
@@ -22,13 +30,41 @@ public class AutoLicenseValidator extends LicenseValidator{
 	 */
 	public AutoLicenseValidator start() {
 		if(!start) {
-			start = true;
-			
-//			Scheduler scheduler = schedulerFactory.getScheduler();
-			
 			result = verifyFirst();
+			if(result != null) {
+				try {
+					Scheduler scheduler = schedulerFactory.getScheduler();
+					JobDataMap data  = new JobDataMap();
+					data.put("AutoLicenseValidator", this);
+					
+					JobDetail job = JobBuilder.newJob(AutoLicenseValidateExecutor.class).withIdentity("license", "validator").usingJobData(data).build();
+					Trigger trigger = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("10 0 0 * * ? *")).build(); // 每晚零点10秒执行
+					scheduler.scheduleJob(job, trigger);
+					scheduler.start();
+					start = true;
+				} catch (SchedulerException e) {
+					result = new ValidationResult() {
+						@Override
+						public String getMessage() {
+							return "启动自动验证授权文件功能失败";
+						}
+						@Override
+						protected String getCode_() {
+							return "start.auto.license.validator.fail";
+						}
+					};
+				}
+			}
 		}
 		return this;
+	}
+	
+	/**
+	 * 自动验证
+	 */
+	void autoVerify() {
+		if(result == null)
+			result = verify();
 	}
 	
 	/**
@@ -38,18 +74,4 @@ public class AutoLicenseValidator extends LicenseValidator{
 	public ValidationResult getResult() {
 		return result;
 	}
-	
-//	public static void main(String[] args) throws Exception {
-//		SchedulerFactory schedulerFactory = new StdSchedulerFactory();
-//		Scheduler scheduler = schedulerFactory.getScheduler();
-//		
-//		JobDetail job = JobBuilder.newJob(MyJob.class).withIdentity("test", "license").build();
-//		Trigger trigger = TriggerBuilder.newTrigger()
-//				.startNow()
-//				.withSchedule(CronScheduleBuilder.cronSchedule("* * * * * ? *"))
-//				.build();
-//		
-//		scheduler.scheduleJob(job, trigger);
-//		scheduler.start();
-//	}
 }
