@@ -20,7 +20,6 @@ class AutoLicenseValidatorThread extends Thread{
 		long l, sleep;
 		while(true) {
 			sleep = sleep();
-			System.out.println(sleep);
 			try {
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
@@ -28,8 +27,7 @@ class AutoLicenseValidatorThread extends Thread{
 			}
 			
 			l = System.currentTimeMillis() - lastValidateTime - sleep;
-			if(l < -5000 || l > 5000) {
-				System.out.println(l);
+			if(l < -1000 || l > 1000) {
 				validator.updateResult(new ValidationResult() {
 					@Override
 					public String getMessage() {
