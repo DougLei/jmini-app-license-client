@@ -25,7 +25,7 @@ public class LicenseValidator {
 	}
 	
 	/**
-	 * 验证验证所有的信息, 不包括签名, 用在系统运行时
+	 * 验证所有的信息, 不包括签名, 用在系统运行时
 	 * @return
 	 */
 	public ValidationResult verify() {

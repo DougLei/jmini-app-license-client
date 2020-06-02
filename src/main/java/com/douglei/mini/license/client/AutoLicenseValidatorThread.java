@@ -3,13 +3,13 @@ package com.douglei.mini.license.client;
 import java.util.Calendar;
 
 /**
- * 自动的授权文件验证执行器
+ * 自动的授权文件验证器线程
  * @author DougLei
  */
-class AutoLicenseValidateExecutor extends Thread{
+class AutoLicenseValidatorThread extends Thread{
 	private AutoLicenseValidator validator;
 	
-	public AutoLicenseValidateExecutor(String name, AutoLicenseValidator validator) {
+	public AutoLicenseValidatorThread(String name, AutoLicenseValidator validator) {
 		super(name);
 		this.validator = validator;
 	}
