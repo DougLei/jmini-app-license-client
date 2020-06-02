@@ -27,7 +27,7 @@ class AutoLicenseValidatorThread extends Thread{
 			}
 			
 			l = System.currentTimeMillis() - lastValidateTime - sleep;
-			if(l < -1000 || l > 1000) {
+			if(l < -1000) {
 				validator.updateResult(new ValidationResult() {
 					@Override
 					public String getMessage() {
