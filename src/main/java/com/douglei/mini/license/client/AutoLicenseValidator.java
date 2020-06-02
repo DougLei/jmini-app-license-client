@@ -49,4 +49,9 @@ public class AutoLicenseValidator extends LicenseValidator{
 	public ValidationResult getResult() {
 		return result;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("授权文件验证结果: %s, 剩余有效天数: %d", result==null?"正常":result, getLeftDays());
+	}
 }
