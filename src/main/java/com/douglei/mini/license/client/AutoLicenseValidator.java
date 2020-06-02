@@ -5,13 +5,11 @@ package com.douglei.mini.license.client;
  * @author DougLei
  */
 public class AutoLicenseValidator extends LicenseValidator{
-	private final Thread validatorThread;// 定时验证授权文件的线程 
-	private boolean start; // 标识是否已经启动
+	private boolean start;
 	private ValidationResult result; // 验证结果
 	
 	public AutoLicenseValidator(String publicKey) {
 		super(publicKey);
-		validatorThread = new AutoLicenseValidatorThread("auto.license.validator", this);
 	}
 	
 	/**
@@ -25,6 +23,14 @@ public class AutoLicenseValidator extends LicenseValidator{
 	}
 	
 	/**
+	 * 由外部更新验证结果
+	 * @param result
+	 */
+	void updateResult(ValidationResult result) {
+		this.result = result;
+	}
+	
+	/**
 	 * 启动验证
 	 */
 	public void start() {
@@ -32,7 +38,7 @@ public class AutoLicenseValidator extends LicenseValidator{
 			start = true;
 			result = verifyFirst();
 			if(result == null) 
-				validatorThread.start();
+				new AutoLicenseValidatorThread("auto.license.validator", this).start();
 		}
 	}
 	
@@ -42,13 +48,5 @@ public class AutoLicenseValidator extends LicenseValidator{
 	 */
 	public ValidationResult getResult() {
 		return result;
-	}
-	
-	/**
-	 * 是否启动
-	 * @return
-	 */
-	public boolean isStart() {
-		return start;
 	}
 }
