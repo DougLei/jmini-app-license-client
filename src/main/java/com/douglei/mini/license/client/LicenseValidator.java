@@ -14,11 +14,13 @@ class LicenseValidator {
 	}
 	
 	/**
-	 * 初次验证所有的信息, 包括签名, 用在系统启动时
+	 * 初次验证所有的信息, 包括签名, 授权文件的起始日期, 用在系统启动时
 	 * @return
 	 */
 	protected ValidationResult verifyFirst() {
 		ValidationResult result = licenseFile.signature.verify(publicKey, licenseFile.getContentDigest());
+		if(result == null)
+			result = licenseFile.start.verify();
 		if(result == null)
 			result = verify();
 		return result;

@@ -1,12 +1,8 @@
 package com.douglei.mini.license.client.property;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 
 import com.douglei.mini.license.client.ValidationResult;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
@@ -15,7 +11,7 @@ import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
  * 
  * @author DougLei
  */
-public class ExpiredProperty extends Property {
+public class ExpiredProperty extends DateProperty {
 	private final String lastSystemTimeFilePath = System.getProperty("user.home") + File.separatorChar + ".lst" + File.separatorChar + "lst"; // 记录上一次系统时间的文件路径
 	private int leftDays; // 剩余天数
 	
@@ -34,7 +30,7 @@ public class ExpiredProperty extends Property {
 	public ValidationResult verify() {
 		LocalDateTime current = LocalDateTime.now();
 		ValidationResult result = verifySystemTime(current);
-		if(result == null && (leftDays = ((int)(ChronoUnit.DAYS.between(current.toLocalDate(), getExpiredDate())+1))) <= 0) {
+		if(result == null && (leftDays = ((int)(ChronoUnit.DAYS.between(current.toLocalDate(), getDate())+1))) <= 0) {
 			result = new ValidationResult() {
 				
 				@Override
@@ -77,20 +73,6 @@ public class ExpiredProperty extends Property {
 		}
 		JdkSerializeProcessor.serialize2File(current, lastSystemTimeFilePath);
 		return null;
-	}
-	
-	private LocalDate expiredDate;
-	private LocalDate getExpiredDate() {
-		if(expiredDate == null) {
-			try {
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(value));
-				expiredDate = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}		
-		}
-		return expiredDate;
 	}
 	
 	/**

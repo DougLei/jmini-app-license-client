@@ -15,7 +15,7 @@ import com.douglei.tools.utils.ExceptionUtil;
  * 硬件相关的属性
  * @author DougLei
  */
-public abstract class HardwareProperty extends Property{
+abstract class HardwareProperty extends Property{
 	private static final Logger logger = LoggerFactory.getLogger(HardwareProperty.class);
 	
 	protected HardwareProperty(String name, String value) {
