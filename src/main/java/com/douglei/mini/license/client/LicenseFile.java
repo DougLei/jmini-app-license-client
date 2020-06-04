@@ -22,7 +22,7 @@ public class LicenseFile {
 	protected SignatureProperty signature;
 	
 	/**
-	 * 获取授权文件的内容摘要
+	 * 获取授权文件的内容摘要, 用于签名和验证签名
 	 * @return
 	 */
 	protected byte[] getContentDigest() {
