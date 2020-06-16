@@ -14,5 +14,8 @@ public class AutoLicenseValidateExecutor implements Job{
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		AutoLicenseValidator validator = (AutoLicenseValidator) context.getJobDetail().getJobDataMap().get("AutoLicenseValidator");
 		validator.autoVerify();
+		
+		System.out.println("========> 验证结果：" + validator.getResult());
+		System.out.println("========> 剩余天数： " + validator.getLeftDays());
 	}
 }

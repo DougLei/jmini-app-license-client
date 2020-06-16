@@ -26,12 +26,12 @@ public class AutoLicenseValidator extends LicenseValidator{
 
 	/**
 	 * 启动验证
-	 * @return 返回自身实例
+	 * @return 返回启动时验证的结果
 	 */
-	public AutoLicenseValidator start() {
+	public ValidationResult start() {
 		if(!start) {
 			result = verifyFirst();
-			if(result != null) {
+			if(result == null) {
 				try {
 					Scheduler scheduler = schedulerFactory.getScheduler();
 					JobDataMap data  = new JobDataMap();
@@ -56,7 +56,7 @@ public class AutoLicenseValidator extends LicenseValidator{
 				}
 			}
 		}
-		return this;
+		return result;
 	}
 	
 	/**

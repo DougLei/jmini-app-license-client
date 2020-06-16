@@ -3,6 +3,9 @@ package com.douglei.mini.license.client.property;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.douglei.mini.license.client.ValidationResult;
@@ -13,6 +16,7 @@ import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
  * @author DougLei
  */
 public class ExpiredProperty extends Property {
+	private int leftDays; // 剩余天数
 	
 	public ExpiredProperty(String value) {
 		super("expired", value);
@@ -29,7 +33,7 @@ public class ExpiredProperty extends Property {
 	public ValidationResult verify() {
 		Date current = new Date();
 		ValidationResult result = verifySystemTime(current);
-		if(result == null && (getExpiredDate().getTime() - current.getTime()) < 0) {
+		if(result == null && (leftDays = ((int)(ChronoUnit.DAYS.between(LocalDate.now(), getExpiredDate())+1))) <= 0) {
 			result = new ValidationResult() {
 				
 				@Override
@@ -80,28 +84,27 @@ public class ExpiredProperty extends Property {
 		return null;
 	}
 	
-	private Date expiredDate;
-	private Date getExpiredDate() {
+	private LocalDate expiredDate;
+	private LocalDate getExpiredDate() {
 		if(expiredDate == null) {
 			try {
-				expiredDate = new SimpleDateFormat("yyyy-MM-dd").parse(value);
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(value));
+				expiredDate = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
 			} catch (ParseException e) {
+				e.printStackTrace();
 			}		
 		}
 		return expiredDate;
 	}
-
+	
 	/**
 	 *  获取剩余有效天数
 	 * @return
 	 */
 	public int getLeftDays() {
-		long leftTimes = getExpiredDate().getTime() - new Date().getTime();
-		if(leftTimes <=0 )
+		if(leftDays < 0)
 			return 0;
-		int leftDays= (int)(leftTimes/1000/60/60/24);
-		if(leftDays == 0)
-			leftDays = 1;
 		return leftDays;
 	}
 }
