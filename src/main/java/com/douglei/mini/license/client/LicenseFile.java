@@ -18,17 +18,12 @@ import com.douglei.mini.license.client.property.StartProperty;
  * @author DougLei
  */
 public class LicenseFile {
-	/**
-	 * 文件后缀
-	 */
-	public final String suffix = ".license"; 
-	
+	public final String suffix = ".license"; // 文件后缀
 	protected StartProperty start;
 	protected ExpiredProperty expired;
 	protected IpProperty ip;
 	protected MacProperty mac ;
 	protected SignatureProperty signature;
-	
 	protected List<CustomProperty> customs;
 	
 	/**
