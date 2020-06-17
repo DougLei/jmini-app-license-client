@@ -1,5 +1,7 @@
 package com.douglei.mini.license.client;
 
+import com.douglei.mini.license.client.property.CustomProperty;
+
 /**
  * 授权文件验证器
  * @author DougLei
@@ -7,19 +9,14 @@ package com.douglei.mini.license.client;
 class LicenseValidator {
 	private String publicKey; // 公钥
 	private LicenseFile licenseFile; // 授权文件实例
-	private ExtLicenseValidator extLicenseValidator; // 扩展的授权文件验证器
 	
 	public LicenseValidator(String publicKey) {
-		this(publicKey, null);
-	}
-	public LicenseValidator(String publicKey, ExtLicenseValidator extLicenseValidator) {
 		this.publicKey = publicKey;
 		this.licenseFile = new LicenseFileReader().read();
-		this.extLicenseValidator = extLicenseValidator;
 	}
 	
 	/**
-	 * 系统启动时验证
+	 * 启动启动时验证
 	 * @return
 	 */
 	protected ValidationResult verifyByStart() {
@@ -27,9 +24,7 @@ class LicenseValidator {
 		if(result == null)
 			result = licenseFile.start.verify();
 		if(result == null)
-			result = commonVerify();
-		if(result == null && extLicenseValidator != null && licenseFile.existsStartExtMap())
-			result = extLicenseValidator.verifyByStart(licenseFile.startExtMap);
+			result = verify();
 		return result;
 	}
 	
@@ -38,17 +33,6 @@ class LicenseValidator {
 	 * @return
 	 */
 	protected ValidationResult verify() {
-		ValidationResult result = commonVerify();
-		if(result == null && extLicenseValidator != null && licenseFile.existsRunExtMap())
-			result = extLicenseValidator.verify(licenseFile.runExtMap);
-		return result;
-	}
-	
-	/**
-	 * 通用验证
-	 * @return
-	 */
-	private ValidationResult commonVerify() {
 		ValidationResult result = licenseFile.expired.verify();
 		if(result == null && licenseFile.ip != null)
 			result = licenseFile.ip.verify();
@@ -63,5 +47,20 @@ class LicenseValidator {
 	 */
 	public int getLeftDays() {
 		return licenseFile.expired.getLeftDays();
+	}
+	
+	/**
+	 * 获取指定name的自定义授权信息的值
+	 * @param name
+	 * @return
+	 */
+	public String getCustomValue(String name){
+		if(licenseFile.customs != null) {
+			for(CustomProperty custom : licenseFile.customs) {
+				if(custom.getName().equals(name)) 
+					return custom.getValue();
+			}
+		}
+		return null;
 	}
 }

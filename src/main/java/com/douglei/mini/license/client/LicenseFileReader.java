@@ -22,7 +22,7 @@ class LicenseFileReader {
 	 */
 	public LicenseFile read() {
 		LicenseFile licenseFile = new LicenseFile();
-		String path = new FileScanner(".license").scan("").get(0);
+		String path = new FileScanner(licenseFile.suffix).scan("").get(0);
 		logger.info("加载授权文件: {}", path);
 		try(InputStream input = FileScanner.readByScanPath(path)){
 			ByteArrayOutputStream out = new ByteArrayOutputStream(300);

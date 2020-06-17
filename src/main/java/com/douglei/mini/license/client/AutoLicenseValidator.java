@@ -11,9 +11,6 @@ public class AutoLicenseValidator extends LicenseValidator{
 	public AutoLicenseValidator(String publicKey) {
 		super(publicKey);
 	}
-	public AutoLicenseValidator(String publicKey, ExtLicenseValidator extLicenseValidator) {
-		super(publicKey, extLicenseValidator);
-	}
 
 	/**
 	 * 自动验证
