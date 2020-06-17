@@ -11,7 +11,10 @@ public class AutoLicenseValidator extends LicenseValidator{
 	public AutoLicenseValidator(String publicKey) {
 		super(publicKey);
 	}
-	
+	public AutoLicenseValidator(String publicKey, ExtLicenseValidator extLicenseValidator) {
+		super(publicKey, extLicenseValidator);
+	}
+
 	/**
 	 * 自动验证
 	 * @return 并返回验证结果
@@ -36,7 +39,7 @@ public class AutoLicenseValidator extends LicenseValidator{
 	public void start() {
 		if(!start) {
 			start = true;
-			result = verifyFirst();
+			result = verifyByStart();
 			if(result == null) 
 				new AutoLicenseValidatorThread("auto.license.validator", this).start();
 		}

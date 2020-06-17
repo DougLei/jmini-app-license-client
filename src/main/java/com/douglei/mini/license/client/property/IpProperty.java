@@ -10,9 +10,10 @@ import com.douglei.mini.license.client.ValidationResult;
  * @author DougLei
  */
 public class IpProperty extends HardwareProperty {
+	public static final String name = "ip";
 	
 	public IpProperty(String value) {
-		super("ip", value);
+		super(name, value);
 	}
 	
 	/**

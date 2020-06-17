@@ -16,10 +16,11 @@ import com.douglei.tools.utils.ExceptionUtil;
  * @author DougLei
  */
 public class MacProperty extends HardwareProperty {
+	public static final String name = "mac";
 	private static final Logger logger = LoggerFactory.getLogger(MacProperty.class);
 	
 	public MacProperty(String value) {
-		super("mac", value);
+		super(name, value);
 	}
 	
 	/**

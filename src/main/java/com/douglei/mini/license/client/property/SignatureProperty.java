@@ -14,9 +14,10 @@ import com.douglei.mini.license.client.ValidationResult;
  * @author DougLei
  */
 public class SignatureProperty extends Property {
+	public static final String name = "signature";
 	
 	public SignatureProperty(String value) {
-		super("signature", value);
+		super(name, value);
 	}
 	
 	/**

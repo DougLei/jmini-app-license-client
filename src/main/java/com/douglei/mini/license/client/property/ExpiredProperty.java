@@ -12,11 +12,12 @@ import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
  * @author DougLei
  */
 public class ExpiredProperty extends DateProperty {
+	public static final String name = "expired";
 	private final String lastSystemTimeFilePath = System.getProperty("user.home") + File.separatorChar + ".lst" + File.separatorChar + "lst"; // 记录上一次系统时间的文件路径
 	private int leftDays; // 剩余天数
 	
 	public ExpiredProperty(String value) {
-		super("expired", value);
+		super(name, value);
 	}
 	
 	public String getValue() {

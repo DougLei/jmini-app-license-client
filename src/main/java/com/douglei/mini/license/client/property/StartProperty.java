@@ -9,9 +9,10 @@ import com.douglei.mini.license.client.ValidationResult;
  * @author DougLei
  */
 public class StartProperty extends DateProperty {
+	public static final String name = "start";
 	
 	public StartProperty(String value) {
-		super("start", value);
+		super(name, value);
 	}
 	
 	/**
