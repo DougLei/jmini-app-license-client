@@ -12,6 +12,7 @@ public class Test {
 		
 		System.out.println("========> 系统启动, 首次验证结果：" + result);
 		System.out.println("========> 系统启动, 首次剩余天数： " + validator.getLeftDays());
-		System.out.println(validator.getCustomValue("user.coun2t"));
+		System.out.println(validator.getCustomValue("user.count"));
+		System.out.println(validator.getCustomValue("user.count2"));
 	}
 }
