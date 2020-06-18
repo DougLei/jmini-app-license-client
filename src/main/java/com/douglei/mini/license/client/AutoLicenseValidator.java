@@ -1,10 +1,14 @@
 package com.douglei.mini.license.client;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 自动的授权文件验证器
  * @author DougLei
  */
 public class AutoLicenseValidator extends LicenseValidator{
+	private static final Logger logger = LoggerFactory.getLogger(AutoLicenseValidator.class);
 	private boolean start;
 	private ValidationResult result; // 验证结果
 	
@@ -37,6 +41,7 @@ public class AutoLicenseValidator extends LicenseValidator{
 		if(!start) {
 			start = true;
 			result = verifyByStart();
+			logger.info("系统启动, {}", this);
 			if(result == null) 
 				new AutoLicenseValidatorThread("auto.license.validator", this).start();
 		}
