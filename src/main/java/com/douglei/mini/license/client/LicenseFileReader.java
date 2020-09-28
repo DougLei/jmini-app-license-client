@@ -6,7 +6,7 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.tools.instances.scanner.FileScanner;
+import com.douglei.tools.instances.scanner.impl.ResourceScanner;
 
 /**
  * 
@@ -22,9 +22,9 @@ class LicenseFileReader {
 	 */
 	public LicenseFile read() {
 		LicenseFile licenseFile = new LicenseFile();
-		String path = new FileScanner(licenseFile.suffix).scan("").get(0);
+		String path = new ResourceScanner(licenseFile.suffix).scan("").get(0);
 		logger.info("加载授权文件: {}", path);
-		try(InputStream input = FileScanner.readByScanPath(path)){
+		try(InputStream input = ResourceScanner.readByScanPath(path)){
 			ByteArrayOutputStream out = new ByteArrayOutputStream(300);
 			int privateKey = input.read();
 			int separator = input.read()^privateKey;
