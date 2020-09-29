@@ -6,7 +6,7 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.tools.instances.scanner.impl.ResourceScanner;
+import com.douglei.tools.instances.resource.scanner.impl.ResourceScanner;
 
 /**
  * 
