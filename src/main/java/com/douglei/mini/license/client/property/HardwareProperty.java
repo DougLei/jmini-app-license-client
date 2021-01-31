@@ -9,7 +9,7 @@ import java.util.Enumeration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.tools.utils.ExceptionUtil;
+import com.douglei.tools.ExceptionUtil;
 
 /**
  * 硬件相关的属性

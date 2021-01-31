@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import com.douglei.mini.license.client.ValidationResult;
-import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
+import com.douglei.tools.serialize.JdkSerializeProcessor;
 
 /**
  * 
