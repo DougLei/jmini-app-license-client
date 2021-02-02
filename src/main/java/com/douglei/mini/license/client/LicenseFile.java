@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.mini.license.client.property.CustomProperty;
 import com.douglei.mini.license.client.property.EffectiveDateProperty;
 import com.douglei.mini.license.client.property.ExpiredDateProperty;
+import com.douglei.mini.license.client.property.IdProperty;
 import com.douglei.mini.license.client.property.IpProperty;
 import com.douglei.mini.license.client.property.MacProperty;
 import com.douglei.mini.license.client.property.SignatureProperty;
@@ -24,6 +25,7 @@ import com.douglei.tools.ExceptionUtil;
 public class LicenseFile {
 	private static final Logger logger =LoggerFactory.getLogger(LicenseFile.class);
 	public final String suffix = ".license"; // 文件后缀
+	protected IdProperty id;
 	protected EffectiveDateProperty effectiveDate;
 	protected ExpiredDateProperty expiredDate;
 	protected IpProperty ip;
@@ -36,7 +38,8 @@ public class LicenseFile {
 	 * @return
 	 */
 	protected byte[] getContentDigest() {
-		StringBuilder content = new StringBuilder(500);
+		StringBuilder content = new StringBuilder(300);
+		content.append(id.getContent());
 		content.append(effectiveDate.getContent());
 		content.append(expiredDate.getContent());
 		if(ip != null)
@@ -65,11 +68,14 @@ public class LicenseFile {
 		String name = content.substring(0, equalSignIndex);
 		String value = content.substring(equalSignIndex+1);
 		switch(name) {
+			case IdProperty.NAME:
+				id = new IdProperty(value);
+				break;
 			case EffectiveDateProperty.NAME:
 				effectiveDate = new EffectiveDateProperty(value);
 				break;
 			case ExpiredDateProperty.NAME:
-				expiredDate = new ExpiredDateProperty(value);
+				expiredDate = new ExpiredDateProperty(id.getValue(), value);
 				break;
 			case IpProperty.NAME:
 				ip = new IpProperty(value);

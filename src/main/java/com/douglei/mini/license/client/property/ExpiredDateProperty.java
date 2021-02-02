@@ -13,12 +13,12 @@ import com.douglei.tools.JdkSerializeUtil;
  */
 public class ExpiredDateProperty extends AbstractDateProperty {
 	public static final String NAME = "expired-date";
-	private String lastSystemTimeFilePath; // 记录上一次系统时间的文件路径
+	private File lstFile; // 记录上一次系统时间的文件路径
 	private int leftDays; // 剩余天数
 	
-	public ExpiredDateProperty(String value) {
+	public ExpiredDateProperty(String id, String value) {
 		super(NAME, value);
-		this.lastSystemTimeFilePath = System.getProperty("user.home") + File.separatorChar +"lst";
+		this.lstFile = new File(System.getProperty("user.home") + File.separatorChar +id+"lst");
 	}
 	
 	/**
@@ -51,9 +51,8 @@ public class ExpiredDateProperty extends AbstractDateProperty {
 	 * @return
 	 */
 	private ValidationResult verifySystemTime(LocalDateTime current) {
-		File lastSystemTimeFile = new File(lastSystemTimeFilePath);
-		if(lastSystemTimeFile.exists()) {
-			LocalDateTime lastSystemTime = JdkSerializeUtil.deserialize4File(LocalDateTime.class, lastSystemTimeFile);
+		if(lstFile.exists()) {
+			LocalDateTime lastSystemTime = JdkSerializeUtil.deserialize4File(LocalDateTime.class, lstFile);
 			if(current.isBefore(lastSystemTime)) {
 				return new ValidationResult() {
 					
@@ -69,7 +68,7 @@ public class ExpiredDateProperty extends AbstractDateProperty {
 				};
 			}
 		}
-		JdkSerializeUtil.serialize4File(current, lastSystemTimeFile);
+		JdkSerializeUtil.serialize4File(current, lstFile);
 		return null;
 	}
 	

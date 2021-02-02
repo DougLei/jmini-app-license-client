@@ -5,7 +5,7 @@ import com.douglei.mini.license.client.ValidationResult;
 
 public class Test {
 	public static void main(String[] args) {
-		LicenseValidateApp validator = new LicenseValidateApp("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCMgkmuD9EuilX8hAx+nQfcAu/fKmla1wm08ogCV4akbSXG1AKkzYvf7i6JEwxMGQbqPfbHX7w1XqshJfuJwvjs9fEGPwMd4pSMk8Fia5CMMruenYfciN56QMwQLRNaJmgYCkYtphqjT7rf2NQ2hfHo3Z/TxbNidsWs3REHt19IOQIDAQAB");
+		LicenseValidateApp validator = new LicenseValidateApp("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvaZOJtOYKTbHA1aL1q7N7WN+Iru2A82Ql0MTuLZop6MUDwdNk6wOo3yyDkva8It/i/yqkPfHycbUtbYWvF7nwG7QK3JzkfJI9cbCRrU8abawQ0RD/8Js+Jk/s731lXjk+U4WZs686IZ9XbDOcY6HUoVPBvJZQVycbk50eBm8rmQIDAQAB");
 		
 		validator.startup();
 		ValidationResult result = validator.getResult();
