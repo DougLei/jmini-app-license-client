@@ -5,6 +5,7 @@ package com.douglei.mini.license.client;
  * @author DougLei
  */
 public abstract class ValidationResult {
+	private static final Object[] EMPTY_ARRAY = new Object[0];
 	
 	/**
 	 * 返回message
@@ -16,22 +17,14 @@ public abstract class ValidationResult {
 	 * 返回code, 后续可以集成国际化
 	 * @return
 	 */
-	public final String getCode() {
-		return "license.validate." + getCode_();
-	}
-	
-	/**
-	 * 返回code, 后续可以集成国际化
-	 * @return
-	 */
-	protected abstract String getCode_();
+	public abstract String getCode();
 	
 	/**
 	 * 匹配国际化消息中的占位符参数
 	 * @return
 	 */
-	public Object[] getI18nParams() {
-		return null;
+	public Object[] getParams() {
+		return EMPTY_ARRAY;
 	}
 	
 	@Override

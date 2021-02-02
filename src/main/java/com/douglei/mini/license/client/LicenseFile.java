@@ -6,21 +6,26 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.douglei.mini.license.client.property.CustomProperty;
-import com.douglei.mini.license.client.property.ExpiredProperty;
+import com.douglei.mini.license.client.property.EffectiveDateProperty;
+import com.douglei.mini.license.client.property.ExpiredDateProperty;
 import com.douglei.mini.license.client.property.IpProperty;
 import com.douglei.mini.license.client.property.MacProperty;
 import com.douglei.mini.license.client.property.SignatureProperty;
-import com.douglei.mini.license.client.property.StartProperty;
+import com.douglei.tools.ExceptionUtil;
 
 /**
  * 授权文件实例
  * @author DougLei
  */
 public class LicenseFile {
+	private static final Logger logger =LoggerFactory.getLogger(LicenseFile.class);
 	public final String suffix = ".license"; // 文件后缀
-	protected StartProperty start;
-	protected ExpiredProperty expired;
+	protected EffectiveDateProperty effectiveDate;
+	protected ExpiredDateProperty expiredDate;
 	protected IpProperty ip;
 	protected MacProperty mac ;
 	protected SignatureProperty signature;
@@ -32,8 +37,8 @@ public class LicenseFile {
 	 */
 	protected byte[] getContentDigest() {
 		StringBuilder content = new StringBuilder(500);
-		content.append(start.getContent());
-		content.append(expired.getContent());
+		content.append(effectiveDate.getContent());
+		content.append(expiredDate.getContent());
 		if(ip != null)
 			content.append(ip.getContent());
 		if(mac != null)
@@ -45,8 +50,9 @@ public class LicenseFile {
 			digest.update(content.toString().getBytes());
 			return digest.digest();
 		} catch (NoSuchAlgorithmException e) {
+			logger.error("获取授权文件的内容摘要, 用于签名和验证签名时出现异常: {}", ExceptionUtil.getStackTrace(e));
+			throw new RuntimeException("获取授权文件的内容摘要, 用于签名和验证签名时出现异常", e);
 		}
-		return null;
 	}
 	
 	/**
@@ -59,19 +65,19 @@ public class LicenseFile {
 		String name = content.substring(0, equalSignIndex);
 		String value = content.substring(equalSignIndex+1);
 		switch(name) {
-			case StartProperty.name:
-				start = new StartProperty(value);
+			case EffectiveDateProperty.NAME:
+				effectiveDate = new EffectiveDateProperty(value);
 				break;
-			case ExpiredProperty.name:
-				expired = new ExpiredProperty(value);
+			case ExpiredDateProperty.NAME:
+				expiredDate = new ExpiredDateProperty(value);
 				break;
-			case IpProperty.name:
+			case IpProperty.NAME:
 				ip = new IpProperty(value);
 				break;
-			case MacProperty.name:
+			case MacProperty.NAME:
 				mac = new MacProperty(value);
 				break;
-			case SignatureProperty.name:
+			case SignatureProperty.NAME:
 				signature = new SignatureProperty(value);
 				break;
 			default:

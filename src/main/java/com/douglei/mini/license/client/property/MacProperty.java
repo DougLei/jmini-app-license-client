@@ -10,17 +10,25 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.mini.license.client.ValidationResult;
 import com.douglei.tools.ExceptionUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
 public class MacProperty extends HardwareProperty {
-	public static final String name = "mac";
+	public static final String NAME = "mac";
 	private static final Logger logger = LoggerFactory.getLogger(MacProperty.class);
+	private String[] macs;
 	
 	public MacProperty(String value) {
-		super(name, value);
+		super(NAME, value);
+		
+		if(StringUtil.unEmpty(value)) {
+			macs = value.split(",");
+			for (int i = 0; i < macs.length; i++) 
+				macs[i] = macs[i].trim();
+		}
 	}
 	
 	/**
@@ -28,44 +36,38 @@ public class MacProperty extends HardwareProperty {
 	 * @return
 	 */
 	public ValidationResult verify() {
-		String localhostMac = getLocalhostMac();
-		for(String mac : getMacs()) {
-			if(localhostMac.equals(mac)) {
+		if(macs == null)
+			return null;
+		
+		String localhostMAC = getLocalhostMAC();
+		if(localhostMAC == null)
+			return null;
+		
+		for(String mac : macs) {
+			if(localhostMAC.equals(mac)) 
 				return null;
-			}
 		}
 		return new ValidationResult() {
 			
 			@Override
 			public String getMessage() {
-				return "本机MAC地址["+localhostMac+"]不合法，合法的MAC地址包括" + Arrays.toString(getMacs());
+				return "本机MAC地址["+localhostMAC+"]不合法，合法的MAC地址包括" + Arrays.toString(macs);
 			}
 			
 			@Override
-			protected String getCode_() {
-				return "mac.unlegal";
+			public String getCode() {
+				return "license.mac.unlegal";
 			}
 			
 			@Override
-			public Object[] getI18nParams() {
-				return new Object[] {localhostMac, Arrays.toString(getMacs())};
+			public Object[] getParams() {
+				return new Object[] {localhostMAC, Arrays.toString(macs)};
 			}
 		};
 	}
 	
-	private String[] macs;
-	private String[] getMacs() {
-		if(macs == null) {
-			macs = value.split(",");
-			for (int i = 0; i < macs.length; i++) {
-				macs[i] = macs[i].trim();
-			}
-		}
-		return macs;
-	}
-	
 	// 获取本机的mac地址
-	private String getLocalhostMac() {
+	private String getLocalhostMAC() {
 		InetAddress inetAddress = getInetAddress();
 		if(inetAddress != null) {
 			try {
@@ -77,10 +79,9 @@ public class MacProperty extends HardwareProperty {
 				}
 				return sb.toString();
 			} catch (SocketException e) {
-				logger.error("无法获取主机的MAC信息: {}", ExceptionUtil.getExceptionDetailMessage(e));
+				logger.error("无法获取主机的MAC信息: {}", ExceptionUtil.getStackTrace(e));
 			}
 		}
-			
 		return null;
 	}
 }

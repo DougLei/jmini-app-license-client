@@ -9,14 +9,14 @@ import org.slf4j.LoggerFactory;
  * 自动的授权文件验证器线程
  * @author DougLei
  */
-class AutoLicenseValidatorThread extends Thread{
-	private static final Logger logger = LoggerFactory.getLogger(AutoLicenseValidatorThread.class);
-	private AutoLicenseValidator validator;
+class LicenseValidateThread extends Thread{
+	private static final Logger logger = LoggerFactory.getLogger(LicenseValidateThread.class);
+	private LicenseValidateApp app;
 	private long lastValidateTime; // 记录上一次验证的时间
 	
-	public AutoLicenseValidatorThread(String name, AutoLicenseValidator validator) {
+	public LicenseValidateThread(String name, LicenseValidateApp app) {
 		super(name);
-		this.validator = validator;
+		this.app = app;
 	}
 
 	@Override
@@ -32,24 +32,24 @@ class AutoLicenseValidatorThread extends Thread{
 			
 			l = System.currentTimeMillis() - lastValidateTime - sleep;
 			if(l < -1000) {
-				validator.updateResult(new ValidationResult() {
+				app.result = new ValidationResult() {
 					@Override
 					public String getMessage() {
 						return "系统时间错误";
 					}
 					@Override
-					public String getCode_() {
-						return "system.time.error";
+					public String getCode() {
+						return "license.system.time.error";
 					}
-				});
+				};
 				break;
 			}
-			if(validator.autoVerify() != null)
+			if(app.verifyByThread() != null)
 				break;
 			
-			logger.info("{}", validator);
+			logger.info("{}", app);
 		}
-		logger.info("{}", validator);
+		logger.info("{}", app);
 	}
 	
 	// 获取需要sleep的毫秒数, 获得当前日期到零点之间的毫秒数

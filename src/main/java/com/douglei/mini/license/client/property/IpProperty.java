@@ -4,16 +4,24 @@ import java.net.InetAddress;
 import java.util.Arrays;
 
 import com.douglei.mini.license.client.ValidationResult;
+import com.douglei.tools.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
 public class IpProperty extends HardwareProperty {
-	public static final String name = "ip";
+	public static final String NAME = "ip";
+	private String[] ips;
 	
 	public IpProperty(String value) {
-		super(name, value);
+		super(NAME, value);
+		
+		if(StringUtil.unEmpty(value)) {
+			ips = value.split(",");
+			for (int i = 0; i < ips.length; i++) 
+				ips[i] = ips[i].trim();
+		}
 	}
 	
 	/**
@@ -21,48 +29,41 @@ public class IpProperty extends HardwareProperty {
 	 * @return
 	 */
 	public ValidationResult verify() {
-		String localhostIp = getLocalhostIp();
-		for(String ip : getIps()) {
-			if(localhostIp.equals(ip)) {
+		if(ips == null)
+			return null;
+		
+		String localhostIP = getLocalhostIP();
+		if(localhostIP == null)
+			return null;
+		
+		for(String ip : ips) {
+			if(localhostIP.equals(ip)) 
 				return null;
-			}
 		}
 		return new ValidationResult() {
 			
 			@Override
 			public String getMessage() {
-				return "本机IP地址["+localhostIp+"]不合法，合法的IP地址包括" + Arrays.toString(getIps());
+				return "本机IP地址["+localhostIP+"]不合法，合法的IP地址包括" + Arrays.toString(ips);
 			}
 			
 			@Override
-			protected String getCode_() {
-				return "ip.unlegal";
+			public String getCode() {
+				return "license.ip.unlegal";
 			}
 			
 			@Override
-			public Object[] getI18nParams() {
-				return new Object[] {localhostIp, Arrays.toString(getIps())};
+			public Object[] getParams() {
+				return new Object[] {localhostIP, Arrays.toString(ips)};
 			}
 		};
 	}
 	
-	private String[] ips;
-	private String[] getIps() {
-		if(ips == null) {
-			ips = value.split(",");
-			for (int i = 0; i < ips.length; i++) {
-				ips[i] = ips[i].trim();
-			}
-		}
-		return ips;
-	}
-	
 	// 获取到本机ip地址
-	private String getLocalhostIp() {
+	private String getLocalhostIP() {
 		InetAddress inetAddress = getInetAddress();
-		if(inetAddress != null) {
+		if(inetAddress != null) 
 			return inetAddress.getHostAddress();
-		}
 		return null;
 	}
 }

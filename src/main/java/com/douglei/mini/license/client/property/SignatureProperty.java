@@ -13,11 +13,11 @@ import com.douglei.mini.license.client.ValidationResult;
  * 
  * @author DougLei
  */
-public class SignatureProperty extends Property {
-	public static final String name = "signature";
+public class SignatureProperty extends AbstractProperty {
+	public static final String NAME = "signature";
 	
 	public SignatureProperty(String value) {
-		super(name, value);
+		super(NAME, value);
 	}
 	
 	/**
@@ -44,8 +44,8 @@ public class SignatureProperty extends Property {
 					return "公钥不合法";
 				}
 				@Override
-				protected String getCode_() {
-					return "public.key.unlegal";
+				public String getCode() {
+					return "license.public.key.unlegal";
 				}
 			};
 		}
@@ -55,8 +55,8 @@ public class SignatureProperty extends Property {
 				return "签名不合法";
 			}
 			@Override
-			protected String getCode_() {
-				return "signature.unlegal";
+			public String getCode() {
+				return "license.signature.unlegal";
 			}
 		};
 	}

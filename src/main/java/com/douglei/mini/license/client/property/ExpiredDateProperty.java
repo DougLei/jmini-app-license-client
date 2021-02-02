@@ -5,27 +5,24 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import com.douglei.mini.license.client.ValidationResult;
-import com.douglei.tools.serialize.JdkSerializeProcessor;
+import com.douglei.tools.JdkSerializeUtil;
 
 /**
  * 
  * @author DougLei
  */
-public class ExpiredProperty extends DateProperty {
-	public static final String name = "expired";
-	private final String lastSystemTimeFilePath = System.getProperty("user.home") + File.separatorChar + ".lst" + File.separatorChar + "lst"; // 记录上一次系统时间的文件路径
+public class ExpiredDateProperty extends AbstractDateProperty {
+	public static final String NAME = "expired-date";
+	private String lastSystemTimeFilePath; // 记录上一次系统时间的文件路径
 	private int leftDays; // 剩余天数
 	
-	public ExpiredProperty(String value) {
-		super(name, value);
-	}
-	
-	public String getValue() {
-		return value;
+	public ExpiredDateProperty(String value) {
+		super(NAME, value);
+		this.lastSystemTimeFilePath = System.getProperty("user.home") + File.separatorChar +"lst";
 	}
 	
 	/**
-	 * 验证有效期
+	 * 验证截止日期
 	 * @return
 	 */
 	public ValidationResult verify() {
@@ -40,8 +37,8 @@ public class ExpiredProperty extends DateProperty {
 				}
 				
 				@Override
-				public String getCode_() {
-					return "file.expired";
+				public String getCode() {
+					return "license.file.expired";
 				}
 			};
 		}
@@ -56,23 +53,23 @@ public class ExpiredProperty extends DateProperty {
 	private ValidationResult verifySystemTime(LocalDateTime current) {
 		File lastSystemTimeFile = new File(lastSystemTimeFilePath);
 		if(lastSystemTimeFile.exists()) {
-			LocalDateTime lastSystemTime = JdkSerializeProcessor.deserializeFromFile(LocalDateTime.class, lastSystemTimeFile);
+			LocalDateTime lastSystemTime = JdkSerializeUtil.deserialize4File(LocalDateTime.class, lastSystemTimeFile);
 			if(current.isBefore(lastSystemTime)) {
 				return new ValidationResult() {
 					
 					@Override
 					public String getMessage() {
-						return "系统时间错误";
+						return "系统时间异常";
 					}
 					
 					@Override
-					public String getCode_() {
-						return "system.time.error";
+					public String getCode() {
+						return "license.system.time.error";
 					}
 				};
 			}
 		}
-		JdkSerializeProcessor.serialize2File(current, lastSystemTimeFilePath);
+		JdkSerializeUtil.serialize4File(current, lastSystemTimeFile);
 		return null;
 	}
 	

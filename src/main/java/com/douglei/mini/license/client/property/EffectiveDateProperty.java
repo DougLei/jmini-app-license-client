@@ -8,15 +8,15 @@ import com.douglei.mini.license.client.ValidationResult;
  * 
  * @author DougLei
  */
-public class StartProperty extends DateProperty {
-	public static final String name = "start";
+public class EffectiveDateProperty extends AbstractDateProperty {
+	public static final String NAME = "effective-date";
 	
-	public StartProperty(String value) {
-		super(name, value);
+	public EffectiveDateProperty(String value) {
+		super(NAME, value);
 	}
 	
 	/**
-	 * 验证有效期
+	 * 验证授权文件的生效日期
 	 * @return
 	 */
 	public ValidationResult verify() {
@@ -25,12 +25,12 @@ public class StartProperty extends DateProperty {
 				
 				@Override
 				public String getMessage() {
-					return "授权文件未激活";
+					return "授权文件未到生效日期";
 				}
 				
 				@Override
-				public String getCode_() {
-					return "file.not.active";
+				public String getCode() {
+					return "license.file.not.effective.date";
 				}
 			};
 		}

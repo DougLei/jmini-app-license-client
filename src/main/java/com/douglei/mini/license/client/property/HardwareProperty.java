@@ -15,7 +15,7 @@ import com.douglei.tools.ExceptionUtil;
  * 硬件相关的属性
  * @author DougLei
  */
-abstract class HardwareProperty extends Property{
+abstract class HardwareProperty extends AbstractProperty{
 	private static final Logger logger = LoggerFactory.getLogger(HardwareProperty.class);
 	
 	protected HardwareProperty(String name, String value) {
@@ -41,7 +41,7 @@ abstract class HardwareProperty extends Property{
 				}
 			}
 		} catch (SocketException e) {
-			logger.error("无法获取主机的IP实例: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("无法获取主机的IP实例: {}", ExceptionUtil.getStackTrace(e));
 		}
 		return null;
 	}
