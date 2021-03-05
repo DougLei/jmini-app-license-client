@@ -24,7 +24,7 @@ class LicenseFileReader {
 		LicenseFile licenseFile = new LicenseFile();
 		String path = new ResourceScanner(licenseFile.suffix).scan("").get(0);
 		logger.info("加载授权文件: {}", path);
-		try(InputStream input = ResourceScanner.readByScanPath(path)){
+		try(InputStream input = ResourceScanner.read(path)){
 			ByteArrayOutputStream out = new ByteArrayOutputStream(300);
 			int privateKey = input.read();
 			int separator = input.read()^privateKey;
